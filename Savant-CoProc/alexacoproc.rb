@@ -17,6 +17,9 @@ if platform.include? "linux"
     configxml = "/data/RPM/GNUstep/Library/ApplicationSupport/RacePointMedia/" + servicefile
 end
 
+# Temp for testing
+configxml = (File.join(File.dirname(File.expand_path(__FILE__)), "serviceImplementation.xml"))
+
 # Lets get the services xml file loaded
 servicesdoc = Document.new(File.new(configxml))
 
