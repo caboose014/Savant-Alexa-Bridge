@@ -2,13 +2,22 @@
 
 require 'socket'
 require 'net/http'
+require 'rexml/document'
 
-
+# Setup some environment variables to start with
 scli = "~/Applications/RacePointMedia/sclibridge "
-configxml = "/Users/RPM/Library/Application Support/RacePointMedia/userConfig.rpmConfig/serviceImplementation.xml"
+servicefile = "userConfig.rpmConfig/serviceImplementation.xml"
+configxml = "/Users/RPM/Library/Application Support/RacePointMedia/" + servicefile
+
+# Check to see if we are running on a linux host, if so we need to change the variables
 platform = RUBY_PLATFORM
 if platform.include? "linux"
     scli = "/usr/local/bin/sclibridge "
-    rpmconfig = Dir["/data/RPM/GNUstep/Library/ApplicationSupport/RacePointMedia/*.rpmConfig"]
-    configxml = "/data/RPM/GNUstep/Library/ApplicationSupport/RacePointMedia/"
+    configxml = "/data/RPM/GNUstep/Library/ApplicationSupport/RacePointMedia/" + servicefile
 end
+
+# Lets get the services xml file loaded
+services = File.new(configxml)
+servicesdoc = Document.new(services)
+
+#
