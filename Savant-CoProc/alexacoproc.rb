@@ -17,7 +17,6 @@ if platform.include? "linux"
 end
 
 # Lets get the services xml file loaded
-services = File.new(configxml)
-servicesdoc = Document.new(services)
+servicesdoc = Document.new(File.new(configxml))
 
 #
