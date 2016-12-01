@@ -31,15 +31,17 @@ servicesdoc.each_element("//zone") do |zone|
     liveservices[zone.attributes["name"]] = {}
 
     zone.each_element("service") do |services|
-        #next unless services.attributes["service_type"].start_with?("SVC_AV_") && services.attributes["enabled"] == "true"
-        #next if services.attributes["service_type"] == "SVC_ENV_AV_DOORBELL"
+        # We only want enabled services
+        next unless services.attributes["enabled"] == "true"
         commands = {}
         if services.attributes["service_type"] == "SVC_GEN_GENERIC"
-            # Here I need to itterate over the custom workflows created...
+            # Itterate over the custom workflows created. Only store workflows enabled on the UI.
             services.each_element("requests/request") do |request|
                 next unless request.attributes["show_request_in_uis"] == "true"
                 commands[request.attributes["name"]] = zone.attributes["name"]+"-"+services.attributes["source_component_name"]+"-"+services.attributes["source_logical_component"]+"-"+services.attributes["variant_id"]+"-"+services.attributes["service_type"]+"="+request.attributes["name"]
             end
+        elsif services.attributes["service_type"] == "SVC_ENV_AV_DOORBELL"
+            next
         elsif services.attributes["service_type"].start_with?("SVC_AV_")
             commands["PowerOn"] = zone.attributes["name"]+"-"+services.attributes["source_component_name"]+"-"+services.attributes["source_logical_component"]+"-"+services.attributes["variant_id"]+"-"+services.attributes["service_type"]+"-PowerOn"
             #commands["PowerOff"] = zone.attributes["name"]+"-----PowerOff"
