@@ -36,9 +36,15 @@ servicesdoc.each_element("//zone") do |zone|
         commands = {}
         if services.attributes["service_type"] == "SVC_GEN_GENERIC"
             # Here I need to itterate over the custom workflows created...
+            services.each_element("requests/request") do |request|
+                next unless request.attributes["show_request_in_uis"] == "true"
+                commands[request.attributes["name"]] = zone.attributes["name"]+"-"+services.attributes["source_component_name"]+"-"+services.attributes["source_logical_component"]+"-"+services.attributes["variant_id"]+"-"+services.attributes["service_type"]+"="+request.attributes["name"]
+            end
         elsif services.attributes["service_type"].start_with?("SVC_AV_")
             commands["PowerOn"] = zone.attributes["name"]+"-"+services.attributes["source_component_name"]+"-"+services.attributes["source_logical_component"]+"-"+services.attributes["variant_id"]+"-"+services.attributes["service_type"]+"-PowerOn"
-            commands["PowerOff"] = zone.attributes["name"]+"-----PowerOff"
+            #commands["PowerOff"] = zone.attributes["name"]+"-----PowerOff"
+        else
+            next
         end
 
         liveservices[zone.attributes["name"]][services.attributes["service_alias"]] = commands
