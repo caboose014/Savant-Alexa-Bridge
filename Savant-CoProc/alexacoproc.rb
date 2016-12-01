@@ -41,11 +41,15 @@ servicesdoc.each_element("//zone") do |zone|
                 commands[request.attributes["name"]] = zone.attributes["name"]+"-"+services.attributes["source_component_name"]+"-"+services.attributes["source_logical_component"]+"-"+services.attributes["variant_id"]+"-"+services.attributes["service_type"]+"="+request.attributes["name"]
             end
         elsif services.attributes["service_type"] == "SVC_ENV_AV_DOORBELL"
+            # We cant do anything with the doorbell service so we need to ignore it
             next
+        # In the future I might break this out to define individual services like SatelliteTV and control channel changes etc..
         elsif services.attributes["service_type"].start_with?("SVC_AV_")
-            commands["PowerOn"] = zone.attributes["name"]+"-"+services.attributes["source_component_name"]+"-"+services.attributes["source_logical_component"]+"-"+services.attributes["variant_id"]+"-"+services.attributes["service_type"]+"-PowerOn"
+            commands["Turn On"] = zone.attributes["name"]+"-"+services.attributes["source_component_name"]+"-"+services.attributes["source_logical_component"]+"-"+services.attributes["variant_id"]+"-"+services.attributes["service_type"]+"-PowerOn"
+            # I think I will try move this to the zone level... rather than have one for each service
             #commands["PowerOff"] = zone.attributes["name"]+"-----PowerOff"
         else
+            # This is not a supported service so we want to skip it.
             next
         end
 
@@ -55,4 +59,5 @@ servicesdoc.each_element("//zone") do |zone|
     end
 end
 
+# Display the completed array. This is for testing only
 puts liveservices
