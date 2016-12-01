@@ -28,15 +28,17 @@ servicesdoc = Document.new(File.new(configxml))
 servicesdoc.each_element("//zone") do |zone|
     # Skip if this is not a user zone
     next if zone.attributes["type"] != "user"
-    puts "+==================="
-    puts zone.attributes["name"]
     liveservices[zone.attributes["name"]] = {}
 
-    zone.each_element("service") do |service|
-        next unless service.attributes["service_type"].start_with?("SVC_AV_", "SVC_ENV_") && service.attributes["enabled"] == "true"
-        next if service.attributes["service_type"] == "SVC_ENV_AV_DOORBELL"
+    zone.each_element("service") do |services|
+        next unless services.attributes["service_type"].start_with?("SVC_AV_") && services.attributes["enabled"] == "true"
+        next if services.attributes["service_type"] == "SVC_ENV_AV_DOORBELL"
 
-        puts service.attributes["service_alias"]
+        commands = {}
+        commands["PowerOn"] = zone.attributes["name"]+"-"+services.attributes["source_component_name"]+"-"+services.attributes["source_logical_component"]+"-"+services.attributes["variant_id"]+"-"+services.attributes["service_type"]+"-PowerOn"
+        commands["PowerOff"] = zone.attributes["name"]+"-----PowerOff"
+
+        liveservices[zone.attributes["name"]][services.attributes["service_alias"]] = commands
     end
 end
 
