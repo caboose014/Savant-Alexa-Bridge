@@ -31,12 +31,15 @@ servicesdoc.each_element("//zone") do |zone|
     liveservices[zone.attributes["name"]] = {}
 
     zone.each_element("service") do |services|
-        next unless services.attributes["service_type"].start_with?("SVC_AV_") && services.attributes["enabled"] == "true"
-        next if services.attributes["service_type"] == "SVC_ENV_AV_DOORBELL"
-
+        #next unless services.attributes["service_type"].start_with?("SVC_AV_") && services.attributes["enabled"] == "true"
+        #next if services.attributes["service_type"] == "SVC_ENV_AV_DOORBELL"
         commands = {}
-        commands["PowerOn"] = zone.attributes["name"]+"-"+services.attributes["source_component_name"]+"-"+services.attributes["source_logical_component"]+"-"+services.attributes["variant_id"]+"-"+services.attributes["service_type"]+"-PowerOn"
-        commands["PowerOff"] = zone.attributes["name"]+"-----PowerOff"
+        if services.attributes["service_type"] == "SVC_GEN_GENERIC"
+            # Here I need to itterate over the custom workflows created...
+        elsif services.attributes["service_type"].start_with?("SVC_AV_")
+            commands["PowerOn"] = zone.attributes["name"]+"-"+services.attributes["source_component_name"]+"-"+services.attributes["source_logical_component"]+"-"+services.attributes["variant_id"]+"-"+services.attributes["service_type"]+"-PowerOn"
+            commands["PowerOff"] = zone.attributes["name"]+"-----PowerOff"
+        end
 
         liveservices[zone.attributes["name"]][services.attributes["service_alias"]] = commands
     end
