@@ -49,7 +49,9 @@ servicesdoc.each_element("//zone") do |zone|
             next
         end
 
-        liveservices[zone.attributes["name"]][services.attributes["service_alias"]] = commands
+        # Add the commands list if there are commands available
+        liveservices[zone.attributes["name"]][services.attributes["service_alias"]] = commands if commands.size > 0
+
     end
 end
 
