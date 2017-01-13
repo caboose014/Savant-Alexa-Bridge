@@ -1,0 +1,24 @@
+# Generate a uuid to use for your own instance and put it here
+uuid: "72B84F3C-A2F9-4139-88FE-592DE4444B7E"
+
+device_settings:
+    hue:
+        host: "10.0.1.50"
+        appid: "17AvM45CJ2TJO4dM4NelSeInGmwVRns4UyG6Vl2s"
+
+devices:
+    1:
+        name: "Movie Lights"
+        type: "hue_scene"
+        group: "0"
+        scene: "5375fcdb3-on-0"
+    2:
+        name: "Work Lights"
+        type: "hue_scene"
+        group: "0"
+        scene: "ef6c2ab27-on-0"
+    3:
+        name: "Savant Service in Lounge"
+        type: "savant_service"
+        poweron: "Living-Jordan Home Host-Main-1-SVC_AV_LIVEMEDIAQUERY_SAVANTMEDIAAUDIO-PowerOn"
+        poweroff: "Living-Jordan Home Host-Main-1-SVC_AV_LIVEMEDIAQUERY_SAVANTMEDIAAUDIO-PowerOff"
