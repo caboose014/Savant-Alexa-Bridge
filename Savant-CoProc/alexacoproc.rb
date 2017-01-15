@@ -10,10 +10,6 @@ require 'securerandom'
 include REXML
 require_relative 'lib/init'
 
-
-# This should be set to false for production
-uselocalxmlfile = true
-
 # Setup some environment variables to start with
 scli = '~/Applications/RacePointMedia/sclibridge '
 servicefile = 'userConfig.rpmConfig/serviceImplementation.xml'
@@ -27,7 +23,11 @@ if platform.include? 'linux'
     configxml = '/data/RPM/GNUstep/Library/ApplicationSupport/RacePointMedia/' + servicefile
 end
 # Local file for testing
-# configxml = (File.join(File.dirname(File.expand_path(__FILE__)), 'serviceImplementation.xml')) if uselocalxmlfile
+if File.exist? (File.join(File.dirname(File.expand_path(__FILE__)), 'serviceImplementation.xml'))
+  puts 'Using local service file'
+  configxml = (File.join(File.dirname(File.expand_path(__FILE__)), 'serviceImplementation.xml'))
+end
+
 
 # Lets get the services xml file loaded
 servicesdoc = Document.new(File.new(configxml))
@@ -70,7 +70,7 @@ servicesdoc.each_element('//zone') do |zone|
         # liveservices[zone.attributes['name']][services.attributes['service_alias']] = commands if commands.size > 0
 
         # Only allow a maximum number of services, not sure if there is a limit or not yet
-        if servicenumber < 30
+        if servicenumber < 43
             if !commands['Turn On'].nil?
               liveservices['devices'][servicenumber] = {"name"=>services.attributes['service_alias'] + " " + zone.attributes['name'], "type"=>"savant_service", "poweron"=>scli + "servicerequestcommand '" + commands['Turn On'] + "'", "poweroff"=>scli + "servicerequestcommand '" + commands['Turn Off'] + "'"}
               servicenumber += 1
