@@ -6,14 +6,14 @@ This project is to integrate Alexa on the Amazon Echo with Savant home automatio
 ### A few notes when creating your RacePoint config:
 * Words in the name of any custom workflow should be separated by spaces only. 'OpenGate' should be written as 'Open Gate'.
 * Service Aliases should be named with spaces between words. 'MediaPlayer' should be named as 'Media Player'.
-* Only custom workflows that you have enabled to show on the UI will work. (`Tools > Review > Custom Workflow usage...`) - See 'To do' list...
+* Only custom workflows that you have enabled to show on the UI will work. (`Tools > Review > Custom Workflow usage...`)
 * Keep service alias's simple, and unique. Otherwise Alexa may have problems understanding your requests
 * Disable any A/V services you are not using (i.e, disable any audio only services if you dont use them)
 
 ### To do:
-* Enable support to run custom workflows
+* ~~Enable support to run custom workflows~~
 * Investigate enabling Environmental services. Some services such as lighting may have an existing Alexa Skill available, check the library to see.
-* Look at a generic 'Turn off <Zone>' command, rather than be a service specific power off
+* Look at a generic zone 'Turn off' command, rather than be having a service specific turn off command
 * Introduce cli switches to only enable specific zones
 
 ### Using Alexa
