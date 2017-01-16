@@ -30,7 +30,6 @@ class Device
       "manufacturername" => "Philips",
       "modelid" => "LWB006",
       "name" => @name,
-      "pointsymbol" => {  "1" => "none", "2" => "none", "3" => "none", "4" => "none", "5" => "none", "6" => "none", "7" => "none", "8" => "none" },
       "state" => { "alert" => "none", "bri" => 254, "on" => @state, "reachable" => true },
       "swversion" => "5.38.2.19136",
       "type" => "Dimmable Light"
@@ -107,10 +106,10 @@ class SavantService < Device
     def set_state(state)
         super state
         if state
-            puts @poweron
+            #execute the power on command
             `#{@poweron}`
         else
-            puts @poweroff
+          #execute the power off command
             `#{@poweroff}`
         end
     end
