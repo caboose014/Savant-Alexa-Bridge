@@ -24,6 +24,9 @@ if platform.include? 'linux'
   configxml = '/data/RPM/GNUstep/Library/ApplicationSupport/RacePointMedia/' + servicefile
 end
 
+# Announce we have started and are processing services
+puts "Processing available services in current config. This could take some time depending on the number of zones and services available."
+
 # Load a local file. This is for testing and will only load if the file exists
 if File.exist? (File.join(File.dirname(File.expand_path(__FILE__)), 'serviceImplementation.xml'))
   puts 'Using local service file'
