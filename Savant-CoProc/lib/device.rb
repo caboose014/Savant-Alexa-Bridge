@@ -27,12 +27,12 @@ class Device
 
   def to_json(*a)
     {
-      "manufacturername" => "Philips",
-      "modelid" => "LWB006",
-      "name" => @name,
-      "state" => { "alert" => "none", "bri" => 254, "on" => @state, "reachable" => true },
-      "swversion" => "5.38.2.19136",
-      "type" => "Dimmable Light"
+        "manufacturername" => "Philips",
+        "modelid" => "LWB006",
+        "name" => @name,
+        "state" => {"alert" => "none", "bri" => 254, "on" => @state, "reachable" => true},
+        "swversion" => "5.38.2.19136",
+        "type" => "Dimmable Light"
     }.to_json(*a)
   end
 
@@ -95,22 +95,22 @@ end
 # end
 
 class SavantService < Device
-    register_device("savant_service")
+  register_device("savant_service")
 
-    def initialize(data)
-        super data
-        @poweron = data['poweron']
-        @poweroff = data['poweroff']
-    end
+  def initialize(data)
+    super data
+    @poweron = data['poweron']
+    @poweroff = data['poweroff']
+  end
 
-    def set_state(state)
-        super state
-        if state
-            #execute the power on command
-            `#{@poweron}`
-        else
-          #execute the power off command
-            `#{@poweroff}`
-        end
+  def set_state(state)
+    super state
+    if state
+      #execute the power on command
+      `#{@poweron}`
+    else
+      #execute the power off command
+      `#{@poweroff}`
     end
+  end
 end
