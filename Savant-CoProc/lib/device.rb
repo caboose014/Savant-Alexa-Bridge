@@ -113,5 +113,4 @@ class SavantService < Device
             `#{@poweroff}`
         end
     end
-
 end
