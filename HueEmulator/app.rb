@@ -9,8 +9,11 @@ require 'json'
 require_relative 'lib/init'
 
 if settings.bind == 'localhost'
-  puts "IP address not supplied, use -o command line option"
-  exit
+
+  settings.bind = Socket.ip_address_list.detect{|intf| intf.ipv4_private?}
+
+  # puts "IP address not supplied, use -o command line option"
+  # exit
 end
 
 options = YAML.load_file('alexa.yaml')

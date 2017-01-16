@@ -108,8 +108,10 @@ class SavantService < Device
         super state
         if state
             puts @poweron
+            `#{@poweron}`
         else
             puts @poweroff
+            `#{@poweroff}`
         end
     end
 
