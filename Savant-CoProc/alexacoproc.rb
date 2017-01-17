@@ -24,12 +24,26 @@ if platform.include? 'linux'
   configxml = '/data/RPM/GNUstep/Library/ApplicationSupport/RacePointMedia/' + servicefile
 end
 
+# Get our a UUID. If no file exists, create it
+uuidfile = (File.join(File.dirname(File.expand_path(__FILE__)), 'uuid.cfg'))
+if File.exist? uuidfile
+  file = File.open(uuidfile, "rb")
+  uuid = file.read
+else
+  uuid =  SecureRandom.uuid.to_str
+  out_file = File.new("uuid.cfg", "w")
+  out_file.puts(uuid)
+  out_file.close
+end
+
+liveservices["uuid"] = uuid
+
 # Announce we have started and are processing services
-puts "Processing available services in current config. This could take some time depending on the number of zones and services available."
+$stdout.print "Processing available services in current config. This could take some time depending on the number of zones and services available.\n"
 
 # Load a local file. This is for testing and will only load if the file exists
 if File.exist? (File.join(File.dirname(File.expand_path(__FILE__)), 'serviceImplementation.xml'))
-  puts 'Using local service file'
+  $stdout.print 'Using local service file\n'
   testing = true
   configxml = (File.join(File.dirname(File.expand_path(__FILE__)), 'serviceImplementation.xml'))
 end
@@ -97,7 +111,7 @@ liveservices['devices'].each { |key, data|
 
 # print out the devices list, should be removed for production
 if testing
-  puts "Found " + devices.count.to_s + " things to enable"
+  $stdout.print "Found " + devices.count.to_s + " things to enable\n"
 end
 
 
