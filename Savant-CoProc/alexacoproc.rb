@@ -12,7 +12,7 @@ require_relative 'lib/init'
 
 # Setup some environment variables to start with (defaulted for Pro host)
 testing = false
-servicelimit = 60
+servicelimit = 65
 scli = '~/Applications/RacePointMedia/sclibridge '
 servicefile = 'userConfig.rpmConfig/serviceImplementation.xml'
 configxml = '/Users/RPM/Library/Application Support/RacePointMedia/' + servicefile
@@ -71,7 +71,7 @@ servicesdoc.each_element('//zone') do |zone|
           turnon = zone.attributes['name']+'-'+services.attributes['source_component_name']+'-'+services.attributes['source_logical_component']+'-'+services.attributes['variant_id']+'-'+services.attributes['service_type']+'-'+request.attributes['name']
           # I need to figure a way to deal with on/off custom workflows...
           turnoff = turnon
-          liveservices['devices'][servicenumber] = {"name" => request.attributes['name'], "type" => "savant_service", "poweron" => scli + "servicerequestcommand '" + turnon + "'", "poweroff" => scli + "servicerequestcommand '" + turnoff + "'"}
+          liveservices['devices'][servicenumber] = {"name" => request.attributes['name'], "type" => 'savant_service', "poweron" => scli + "servicerequestcommand '" + turnon + "'", "poweroff" => scli + "servicerequestcommand '" + turnoff + "'"}
           servicenumber += 1
         end
       end
@@ -84,8 +84,8 @@ servicesdoc.each_element('//zone') do |zone|
 
       # limit removed for now... it seems to be working fine now.
       if servicenumber < servicelimit
-        if !racepointservices['Turn On'].nil?
-          liveservices['devices'][servicenumber] = {"name" => services.attributes['service_alias'] + " " + zone.attributes['name'], "type" => "savant_service", "poweron" => scli + "servicerequestcommand '" + racepointservices['Turn On'] + "'", "poweroff" => scli + "servicerequestcommand '" + racepointservices['Turn Off'] + "'"}
+        unless racepointservices['Turn On'].nil?
+          liveservices['devices'][servicenumber] = {"name" => services.attributes['service_alias'] + ' ' + zone.attributes['name'], "type" => 'savant_service', "poweron" => scli + "servicerequestcommand '" + racepointservices['Turn On'] + "'", "poweroff" => scli + "servicerequestcommand '" + racepointservices['Turn Off'] + "'"}
           servicenumber += 1
         end
       end
@@ -105,7 +105,7 @@ if settings.bind == 'localhost'
 end
 
 # Convert our service list into devices
-Device.options = liveservices["device_settings"]
+Device.options = liveservices['device_settings']
 devices = {}
 liveservices['devices'].each { |key, data|
   devices[key.to_s] = Device.create data
@@ -113,8 +113,8 @@ liveservices['devices'].each { |key, data|
 
 # print out the devices list, should be removed for production
 if testing
-  $stdout.print "Found " + devices.count.to_s + " things to enable\n"
-  $stdout.print "UUID = " + liveservices['uuid'] + "\n"
+  $stdout.print 'Found ' + devices.count.to_s + " things to enable\n"
+  $stdout.print 'UUID = ' + liveservices['uuid'] + "\n"
 end
 
 # Start web server for discovery and command captures
@@ -164,7 +164,6 @@ end
 # end
 
 get '/api/:userId' do
-  puts "Request all the Stuffs"
   content_type :json
   {}.to_json
 end
