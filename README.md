@@ -25,6 +25,7 @@ This project is to integrate Alexa on the Amazon Echo with Savant home automatio
 * Currently only tested on the Savant Pro Host
 * This is currently unsupported on the SCH-2000 host as there is a bug in Ruby on this host that Savant are not going to resolve. If people want support on this host, please contact me and I can give you information on opening a support case with Savant. Hopfully if enough pople complain, we can get this fixed.
 * When you look at your list of devices on the Alexa app, you will see they populate as Philips Hue White bulbs. This is normal.
+* Integration is currently limited to 64 services/workflows.
 
 ### Check out a live demo here:
 [![Alexa/Savant Integration](https://img.youtube.com/vi/DSympA6xToc/0.jpg)](https://www.youtube.com/watch?v=DSympA6xToc)
