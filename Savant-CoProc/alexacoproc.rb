@@ -12,6 +12,7 @@ require_relative 'lib/init'
 
 # Setup some environment variables to start with (defaulted for Pro host)
 testing = false
+servicelimit = 80
 scli = '~/Applications/RacePointMedia/sclibridge '
 servicefile = 'userConfig.rpmConfig/serviceImplementation.xml'
 configxml = '/Users/RPM/Library/Application Support/RacePointMedia/' + servicefile
@@ -43,7 +44,7 @@ $stdout.print "Processing available services in current config. This could take 
 
 # Load a local file. This is for testing and will only load if the file exists
 if File.exist? (File.join(File.dirname(File.expand_path(__FILE__)), 'serviceImplementation.xml'))
-  $stdout.print 'Using local service file\n'
+  $stdout.print "Using local service file\n"
   testing = true
   configxml = (File.join(File.dirname(File.expand_path(__FILE__)), 'serviceImplementation.xml'))
 end
@@ -66,12 +67,14 @@ servicesdoc.each_element('//zone') do |zone|
     if services.attributes['service_type'] == 'SVC_GEN_GENERIC'
       # Iterate over the custom workflows created. Only use workflows enabled on the UI.
       services.each_element('requests/request') do |request|
-        next unless request.attributes['show_request_in_uis'] == 'true'
-        turnon = zone.attributes['name']+'-'+services.attributes['source_component_name']+'-'+services.attributes['source_logical_component']+'-'+services.attributes['variant_id']+'-'+services.attributes['service_type']+'-'+request.attributes['name']
-        # I need to figure a way to deal with on/off custom workflows...
-        turnoff = turnon
-        liveservices['devices'][servicenumber] = {"name" => request.attributes['name'], "type" => "savant_service", "poweron" => scli + "servicerequestcommand '" + turnon + "'", "poweroff" => scli + "servicerequestcommand '" + turnoff + "'"}
-        servicenumber += 1
+        if servicenumber < servicelimit
+          next unless request.attributes['show_request_in_uis'] == 'true'
+          turnon = zone.attributes['name']+'-'+services.attributes['source_component_name']+'-'+services.attributes['source_logical_component']+'-'+services.attributes['variant_id']+'-'+services.attributes['service_type']+'-'+request.attributes['name']
+          # I need to figure a way to deal with on/off custom workflows...
+          turnoff = turnon
+          liveservices['devices'][servicenumber] = {"name" => request.attributes['name'], "type" => "savant_service", "poweron" => scli + "servicerequestcommand '" + turnon + "'", "poweroff" => scli + "servicerequestcommand '" + turnoff + "'"}
+          servicenumber += 1
+        end
       end
     elsif services.attributes['service_type'] == 'SVC_ENV_AV_DOORBELL'
       # We cant do anything with the doorbell service so we need to ignore it
@@ -81,12 +84,12 @@ servicesdoc.each_element('//zone') do |zone|
       racepointservices['Turn Off'] = zone.attributes['name']+'-'+services.attributes['source_component_name']+'-'+services.attributes['source_logical_component']+'-'+services.attributes['variant_id']+'-'+services.attributes['service_type']+'-PowerOff'
 
       # limit removed for now... it seems to be working fine now.
-      #if servicenumber < 43
-      if !racepointservices['Turn On'].nil?
-        liveservices['devices'][servicenumber] = {"name" => services.attributes['service_alias'] + " " + zone.attributes['name'], "type" => "savant_service", "poweron" => scli + "servicerequestcommand '" + racepointservices['Turn On'] + "'", "poweroff" => scli + "servicerequestcommand '" + racepointservices['Turn Off'] + "'"}
-        servicenumber += 1
+      if servicenumber < servicelimit
+        if !racepointservices['Turn On'].nil?
+          liveservices['devices'][servicenumber] = {"name" => services.attributes['service_alias'] + " " + zone.attributes['name'], "type" => "savant_service", "poweron" => scli + "servicerequestcommand '" + racepointservices['Turn On'] + "'", "poweroff" => scli + "servicerequestcommand '" + racepointservices['Turn Off'] + "'"}
+          servicenumber += 1
+        end
       end
-      #end
     else
       # This is not a supported service so we want to skip it.
       next
@@ -113,7 +116,6 @@ liveservices['devices'].each { |key, data|
 if testing
   $stdout.print "Found " + devices.count.to_s + " things to enable\n"
 end
-
 
 # Start web server for discovery and command captures
 server = SSDPServer.new settings.bind, settings.port, liveservices['uuid']
