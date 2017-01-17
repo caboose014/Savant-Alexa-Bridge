@@ -12,11 +12,11 @@ require_relative 'lib/init'
 
 # Setup some environment variables to start with (defaulted for Pro host)
 testing = false
-servicelimit = 80
+servicelimit = 60
 scli = '~/Applications/RacePointMedia/sclibridge '
 servicefile = 'userConfig.rpmConfig/serviceImplementation.xml'
 configxml = '/Users/RPM/Library/Application Support/RacePointMedia/' + servicefile
-liveservices = {"uuid" => "744d903d-e8ad-4b64-9711-5b733e1c5d71", "devices" => {}}
+liveservices = {"uuid" => SecureRandom.uuid, "devices" => {}}
 
 # Check to see if we are running on a linux host, if so we need to change the variables
 platform = RUBY_PLATFORM
@@ -25,19 +25,18 @@ if platform.include? 'linux'
   configxml = '/data/RPM/GNUstep/Library/ApplicationSupport/RacePointMedia/' + servicefile
 end
 
-# Get our a UUID. If no file exists, create it
-uuidfile = (File.join(File.dirname(File.expand_path(__FILE__)), 'uuid.cfg'))
-if File.exist? uuidfile
-  file = File.open(uuidfile, "rb")
-  uuid = file.read
-else
-  uuid =  SecureRandom.uuid.to_str
-  out_file = File.new("uuid.cfg", "w")
-  out_file.puts(uuid)
-  out_file.close
-end
-
-liveservices["uuid"] = uuid
+# # Get our a UUID. If no file exists, create it
+# uuidfile = (File.join(File.dirname(File.expand_path(__FILE__)), 'uuid.cfg'))
+# if File.exist? uuidfile
+#   file = File.open(uuidfile, "r")
+#   uuid = file.read
+# else
+#   uuid =  SecureRandom.uuid
+#   out_file = File.new("uuid.cfg", "w")
+#   out_file.puts(uuid)
+#   out_file.close
+# end
+# liveservices["uuid"] = uuid.to_s
 
 # Announce we have started and are processing services
 $stdout.print "Processing available services in current config. This could take some time depending on the number of zones and services available.\n"
@@ -115,9 +114,12 @@ liveservices['devices'].each { |key, data|
 # print out the devices list, should be removed for production
 if testing
   $stdout.print "Found " + devices.count.to_s + " things to enable\n"
+  $stdout.print "UUID = " + liveservices['uuid'] + "\n"
 end
 
 # Start web server for discovery and command captures
+
+
 server = SSDPServer.new settings.bind, settings.port, liveservices['uuid']
 server.start
 
