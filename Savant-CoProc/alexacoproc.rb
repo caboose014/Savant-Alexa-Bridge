@@ -25,7 +25,8 @@ if platform.include? 'linux'
   configxml = '/data/RPM/GNUstep/Library/ApplicationSupport/RacePointMedia/' + servicefile
 end
 
-# # Get our a UUID. If no file exists, create it
+# # For some reason, things break when I read the UUID from a file.. no idea why at this point
+# # Get our UUID. If no file exists, create it
 # uuidfile = (File.join(File.dirname(File.expand_path(__FILE__)), 'uuid.cfg'))
 # if File.exist? uuidfile
 #   file = File.open(uuidfile, "r")
@@ -118,8 +119,6 @@ if testing
 end
 
 # Start web server for discovery and command captures
-
-
 server = SSDPServer.new settings.bind, settings.port, liveservices['uuid']
 server.start
 
