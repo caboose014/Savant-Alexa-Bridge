@@ -25,19 +25,18 @@ if platform.include? 'linux'
   configxml = '/data/RPM/GNUstep/Library/ApplicationSupport/RacePointMedia/' + servicefile
 end
 
-# # For some reason, things break when I read the UUID from a file.. no idea why at this point
-# # Get our UUID. If no file exists, create it
-# uuidfile = (File.join(File.dirname(File.expand_path(__FILE__)), 'uuid.cfg'))
-# if File.exist? uuidfile
-#   file = File.open(uuidfile, "r")
-#   uuid = file.read
-# else
-#   uuid =  SecureRandom.uuid
-#   out_file = File.new("uuid.cfg", "w")
-#   out_file.puts(uuid)
-#   out_file.close
-# end
-# liveservices["uuid"] = uuid.to_s
+# Get our UUID. If no file exists, create it and populate a uuid
+uuidfile = (File.join(File.dirname(File.expand_path(__FILE__)), 'uuid.cfg'))
+if File.exist? uuidfile
+  file = File.open(uuidfile, 'r')
+  uuid = file.read
+else
+  uuid =  SecureRandom.uuid
+  out_file = File.new('uuid.cfg', 'w')
+  out_file.puts(uuid)
+  out_file.close
+end
+liveservices['uuid'] = uuid.gsub("\n",'')
 
 # Announce we have started and are processing services
 $stdout.print "Processing available services in current config. This could take some time depending on the number of zones and services available.\n"
