@@ -1,5 +1,18 @@
 #!/usr/bin/env ruby
 
+
+# Process command line switches
+# This has to be put in before the 'require sinatra' otherwise sinatra grabs the arguments
+require 'optparse'
+args = {}
+OptionParser.new do |arg|
+  arg.on('-z','--zone_name x,y,z', Array, 'Comma separated zones to limit discovery to') { |o| args[:zone_name] = o }
+  arg.on('-p','--port_number=val', Integer, 'Specify a custom port (default is 4567)') { |o| args[:port_number] = o }
+  arg.on('-l','--service_limit=val', Integer, 'Limit the number of services/workflows to be discovered') { |o| args[:service_limit] = o }
+  arg.on('-r','--remove_zone', 'Remove the zone name from the service name') { |o| args[:remove_zone] = o }
+end.parse!
+puts args
+# requires
 require 'socket'
 require 'net/http'
 require 'rexml/document'
@@ -10,13 +23,25 @@ require 'securerandom'
 include REXML
 require_relative 'lib/init'
 
+
 # Setup some environment variables to start with (defaulted for Pro host)
 testing = false
-servicelimit = 65
 scli = '~/Applications/RacePointMedia/sclibridge '
 servicefile = 'userConfig.rpmConfig/serviceImplementation.xml'
 configxml = '/Users/RPM/Library/Application Support/RacePointMedia/' + servicefile
 liveservices = {"uuid" => SecureRandom.uuid, "devices" => {}}
+
+# Define maximum services to discover
+if args.key?(:service_limit)
+  servicelimit = args[:service_limit]
+else
+  servicelimit = 65
+end
+
+# Set custom port if defined
+if args.key?(:port_number)
+  set :port, args[:port_number]
+end
 
 # Check to see if we are running on a linux host, if so we need to change the variables
 platform = RUBY_PLATFORM
@@ -59,6 +84,11 @@ servicesdoc.each_element('//zone') do |zone|
   # Skip if this is not a user zone
   next if zone.attributes['type'] != 'user'
 
+  # If we have specified zones, see if this is one of them or move on
+  if args.key?(:zone_name)
+    next unless args[:zone_name].include?(zone.attributes['name'])
+  end
+
   zone.each_element('service') do |services|
     # We only want enabled services
     next unless services.attributes['enabled'] == 'true'
@@ -85,7 +115,12 @@ servicesdoc.each_element('//zone') do |zone|
       # limit removed for now... it seems to be working fine now.
       if servicenumber < servicelimit
         unless racepointservices['Turn On'].nil?
-          liveservices['devices'][servicenumber] = {"name" => services.attributes['service_alias'] + ' ' + zone.attributes['name'], "type" => 'savant_service', "poweron" => scli + "servicerequestcommand '" + racepointservices['Turn On'] + "'", "poweroff" => scli + "servicerequestcommand '" + racepointservices['Turn Off'] + "'"}
+          if args.key?(:remove_zone)
+            add_zone_name = ''
+          else
+            add_zone_name = ' ' + zone.attributes['name']
+          end
+          liveservices['devices'][servicenumber] = {"name" => services.attributes['service_alias'] + add_zone_name, "type" => 'savant_service', "poweron" => scli + "servicerequestcommand '" + racepointservices['Turn On'] + "'", "poweroff" => scli + "servicerequestcommand '" + racepointservices['Turn Off'] + "'"}
           servicenumber += 1
         end
       end
