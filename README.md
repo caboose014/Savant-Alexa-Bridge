@@ -23,6 +23,7 @@ This project is to integrate Alexa on the Amazon Echo with Savant home automatio
   * `-z "Lounge,Master Bedroom,Kitchen"` Comma seperated array of zones to discover. There must be no space after the `,`
   * `-p 4567` Run the script on a different port. If you are starting multiple scripts, then each port number must be different
   * `-r` Don't append the zone name to the serivice alias. This is handy if you are only discovering services for one zone in your whole config.
+* When you upload a new config with new/different services you have to restart the script manually for it to discover changes
 
 ### Important notes:
 * Currently only tested on the Savant Pro Host
