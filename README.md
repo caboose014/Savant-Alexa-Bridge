@@ -14,7 +14,7 @@ This project is to integrate Alexa on the Amazon Echo with Savant home automatio
 * ~~Enable support to run custom workflows~~
 * Investigate enabling Environmental services. Some services such as lighting may have an existing Alexa Skill available, check the library to see.
 * Look at a generic zone 'Turn off' command, rather than be having a service specific turn off command
-* ``Introduce cli switches to only enable specific zones``
+* ~~Introduce cli switches to only enable specific zones~~
 
 ### Using Alexa
 * Services are automaticly discovered from the currently active configuration on the host. Just tell Alexa to 'Discover devices' once the script is up and running
