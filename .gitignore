@@ -9,7 +9,7 @@ test.rb
 *.dll
 *.exe
 *.o
-*.so
+#*.so
 
 # Packages #
 ############
@@ -41,3 +41,4 @@ ehthumbs.db
 Thumbs.db
 
 uuid.cfg
+Savant-Alexa-Bridge.iml

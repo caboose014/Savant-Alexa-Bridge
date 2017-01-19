@@ -11,7 +11,7 @@ OptionParser.new do |arg|
   arg.on('-l','--service_limit=val', Integer, 'Limit the number of services/workflows to be discovered') { |o| args[:service_limit] = o }
   arg.on('-r','--remove_zone', 'Remove the zone name from the service name') { |o| args[:remove_zone] = o }
 end.parse!
-puts args
+
 # requires
 require 'socket'
 require 'net/http'
