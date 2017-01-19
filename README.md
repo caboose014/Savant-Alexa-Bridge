@@ -22,7 +22,7 @@ This project is to integrate Alexa on the Amazon Echo with Savant home automatio
 * To command Alexa to turn on or off a service just say 'Turn on [service alias] in the [zone]'. You can ommit 'In The' if you wish and just say 'Turn on [service alias][zone]'
 * Command line arguments can be used to manipulate the script:
   * `-z "Lounge,Master Bedroom,Kitchen"` Comma seperated array of zones to discover. There must be no space after the `,`
-  * `-p 4567` Run the script on a different port. If you are starting multiple scripts, **The port number must be different for each script**
+  * `-p 4567` Run the script on a different port. If you are starting multiple scripts, **The port number must be different for each instance of the script**
   * `-r` Don't append the zone name to the serivice alias. This is handy if you are only discovering services for one zone in your whole config.
 * When you upload a new config with new/different services you have to restart the script manually for it to discover changes
 
