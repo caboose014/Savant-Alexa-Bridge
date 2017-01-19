@@ -14,12 +14,15 @@ This project is to integrate Alexa on the Amazon Echo with Savant home automatio
 * ~~Enable support to run custom workflows~~
 * Investigate enabling Environmental services. Some services such as lighting may have an existing Alexa Skill available, check the library to see.
 * Look at a generic zone 'Turn off' command, rather than be having a service specific turn off command
-* Introduce cli switches to only enable specific zones
+* ``Introduce cli switches to only enable specific zones``
 
 ### Using Alexa
 * Services are automaticly discovered from the currently active configuration on the host. Just tell Alexa to 'Discover devices' once the script is up and running
 * To command Alexa to turn on or off a service just say 'Turn on [service alias] in the [zone]'. You can ommit 'In The' if you wish and just say 'Turn on [service alias][zone]'
-
+* Command line arguments can be used to manipulate the script:
+  * `-z "Lounge,Master Bedroom,Kitchen"` Comma seperated array of zones to discover. There must be no space after the `,`
+  * `-p 4567` Run the script on a different port. If you are starting multiple scripts, then each port number must be different
+  * `-r` Don't append the zone name to the serivice alias. This is handy if you are only discovering services for one zone in your whole config.
 
 ### Important notes:
 * Currently only tested on the Savant Pro Host
