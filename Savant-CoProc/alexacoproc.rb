@@ -51,18 +51,20 @@ if platform.include? 'linux'
 end
 
 # Get our UUID. If no file exists, create it and populate a uuid
-uuidfile = (File.join(File.dirname(File.expand_path(__FILE__)), 'uuid.cfg'))
-if File.exist? uuidfile
-  file = File.open(uuidfile, 'r')
-  uuid = file.read
-else
-  uuid =  SecureRandom.uuid
-  out_file = File.new('uuid.cfg', 'w')
-  out_file.puts(uuid)
-  out_file.close
+# If a custom port is used, leave the random UUID
+unless args.key?(:port_number)
+  uuidfile = (File.join(File.dirname(File.expand_path(__FILE__)), 'uuid.cfg'))
+  if File.exist? uuidfile
+    file = File.open(uuidfile, 'r')
+    uuid = file.read
+  else
+    uuid =  SecureRandom.uuid
+    out_file = File.new('uuid.cfg', 'w')
+    out_file.puts(uuid)
+    out_file.close
+  end
+  liveservices['uuid'] = uuid.gsub("\n",'')
 end
-liveservices['uuid'] = uuid.gsub("\n",'')
-
 # Announce we have started and are processing services
 $stdout.print "Processing available services in current config. This could take some time depending on the number of zones and services available.\n"
 
