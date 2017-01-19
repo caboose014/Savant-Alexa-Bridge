@@ -18,6 +18,7 @@ This project is to integrate Alexa on the Amazon Echo with Savant home automatio
 
 ### Using Alexa
 * Services are automaticly discovered from the currently active configuration on the host. Just tell Alexa to 'Discover devices' once the script is up and running
+* A single instance of the script is currently limited to 64 services/workflows. This is a limitation on Amazon's side of things. So if you have more services/workflows than this, you will need to run multiple scripts and break out the zones you want to use
 * To command Alexa to turn on or off a service just say 'Turn on [service alias] in the [zone]'. You can ommit 'In The' if you wish and just say 'Turn on [service alias][zone]'
 * Command line arguments can be used to manipulate the script:
   * `-z "Lounge,Master Bedroom,Kitchen"` Comma seperated array of zones to discover. There must be no space after the `,`
